@@ -1,0 +1,68 @@
+# Ignore IDE-specific files
+.idea/
+*.iml
+*.log
+.vscode/
+
+# Ignore OS-generated files
+.DS_Store
+Thumbs.db
+
+# === Backend (Spring Boot + Maven) ===
+/backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+backend/pom.xml.tag
+backend/.classpath
+backend/.project
+backend/.settings/
+
+# Logs and temp files
+backend/logs/
+backend/*.log
+backend/tmp/
+
+# Ignore IntelliJ IDEA and Eclipse files
+backend/.idea/
+backend/.vscode/
+backend/.gradle/
+backend/.settings/
+
+# === Frontend (React + Node.js) ===
+/frontend/node_modules/
+frontend/.next/
+frontend/.nuxt/
+frontend/.expo/
+frontend/.parcel-cache/
+frontend/dist/
+frontend/build/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.eslintcache
+frontend/.turbo/
+
+# Ignore lock files (choose one, depending on your package manager)
+frontend/package-lock.json
+frontend/yarn.lock
+frontend/pnpm-lock.yaml
+
+# Environment variables (if any)
+frontend/.env
+backend/.env
+
+# Ignore dependency directories
+/node_modules/
+/dist/
+/build/
+
+# Ignore coverage reports
+/coverage/
+.nyc_output/
+
+# Ignore temporary files
+*.swp
+*.swo
+*.bak
+*.tmp
