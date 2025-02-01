@@ -110,7 +110,7 @@ cd piggybank
    Start the React development server:
 
    ```sh
-   npm start
+   npx react-scripts start
    ```
 
    The frontend will be available at `http://localhost:3000`.
