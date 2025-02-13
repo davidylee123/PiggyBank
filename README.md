@@ -166,11 +166,12 @@ cd piggybank
 
 ### 4️⃣ **Dependency Issues**
 
-- If you encounter dependency issues, try deleting `node_modules` and reinstalling:
+- If you encounter dependency issues, and can't run the application, try deleting `node_modules` and reinstalling:
 
   ```sh
-  rm -rf node_modules
+  rm -rf node_modules package-lock.json
   npm install
+  npm start
   ```
 
 ---
