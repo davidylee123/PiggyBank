@@ -45,7 +45,6 @@ frontend/.turbo/
 
 # Ignore lock files (choose one, depending on your package manager)
 frontend/package-lock.json
-frontend/package.json
 frontend/package-lock 2.json
 frontend/yarn.lock
 frontend/pnpm-lock.yaml
