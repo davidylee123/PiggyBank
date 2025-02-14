@@ -29,7 +29,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List loginUser(String username, String password) {
+    public List<User> loginUser(String username, String password) {
         return userRepository.findByUsernameAndPassword(username, password);
     }
 }

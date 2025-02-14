@@ -27,7 +27,6 @@ backend/tmp/
 backend/.idea/
 backend/.vscode/
 backend/.gradle/
-backend/.settings/
 
 # === Frontend (React + Node.js) ===
 /frontend/node_modules/
@@ -43,27 +42,11 @@ frontend/yarn-error.log*
 frontend/.eslintcache
 frontend/.turbo/
 
-# Ignore lock files (choose one, depending on your package manager)
-frontend/package-lock.json
-frontend/package-lock 2.json
+# Ignore lock files
 frontend/yarn.lock
 frontend/pnpm-lock.yaml
 
-# Environment variables (if any)
-frontend/.env
-backend/.env
-
 # Ignore dependency directories
-/node_modules/
+frontend/node_modules/
 /dist/
 /build/
-
-# Ignore coverage reports
-/coverage/
-.nyc_output/
-
-# Ignore temporary files
-*.swp
-*.swo
-*.bak
-*.tmp

@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Data
 @Document(collection = "transactions")
@@ -16,12 +16,12 @@ public class Transaction {
     private double amount;
     private String description;
     private String category;
-    private Date transactionDate;
+    private Instant transactionDate;
     private String type;
 
     public Transaction() {}
 
-    public Transaction(String id, String userId, double amount, String description, String category, Date transactionDate, String type) {
+    public Transaction(String id, String userId, double amount, String description, String category, Instant transactionDate, String type) {
         this.id = id;
         this.userId = userId;
         this.amount = amount;
@@ -71,11 +71,11 @@ public class Transaction {
         this.category = category;
     }
 
-    public Date getTransactionDate() {
+    public Instant getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(Date transactionDate) {
+    public void setTransactionDate(Instant transactionDate) {
         this.transactionDate = transactionDate;
     }
 

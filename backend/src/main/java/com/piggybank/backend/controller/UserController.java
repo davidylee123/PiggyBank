@@ -3,6 +3,7 @@ package com.piggybank.backend.controller;
 import com.piggybank.backend.model.User;
 import com.piggybank.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +46,7 @@ public class UserController {
         if (loggedInUsers != null && !loggedInUsers.isEmpty()) {
             return ResponseEntity.ok(loggedInUsers);
         } else {
-            return ResponseEntity.status(401).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 }
