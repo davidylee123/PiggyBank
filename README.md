@@ -73,12 +73,6 @@ cd piggybank
 
    The backend will be available at http://localhost:8080.
 
-5. **Test the Backend**
-
-   Open your browser or Postman and navigate to http://localhost:8080/api/test.
-
-   You should see the response: `"Backend is running!"`
-
 ---
 
 ### 3️⃣ Frontend Setup
@@ -119,8 +113,6 @@ cd piggybank
 
    Open your browser and navigate to `http://localhost:3000`.
 
-   You should see the message: `"Backend is running!"` if the frontend successfully communicates with the backend.
-
 ---
 
 ## 🏃 Running the Project
@@ -151,7 +143,6 @@ cd piggybank
 
 - Ensure MongoDB is running.
 - Check the `application.properties` file for correct MongoDB configuration.
-- Verify the backend is running by visiting `http://localhost:8080/api/test`.
 
 ### 2️⃣ **Frontend Not Connecting to Backend**
 

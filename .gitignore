@@ -30,6 +30,8 @@ backend/.gradle/
 
 # === Frontend (React + Node.js) ===
 /frontend/node_modules/
+frontend/node_modules 2/
+frontend/package-lock 2.json
 frontend/.next/
 frontend/.nuxt/
 frontend/.expo/
