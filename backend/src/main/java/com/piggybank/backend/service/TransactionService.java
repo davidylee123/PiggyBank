@@ -51,4 +51,12 @@ public class TransactionService {
     public List<Transaction> filterByTransactionType(String type) {
         return transactionRepository.findByType(type);
     }
+
+    public List<Transaction> filterByTransactionCategory(String category) {
+        return transactionRepository.findByCategory(category);
+    }
+
+    public List<Transaction> filterByAmount(double min, double max) {
+        return transactionRepository.findByAmount(min, max);
+    }
 }

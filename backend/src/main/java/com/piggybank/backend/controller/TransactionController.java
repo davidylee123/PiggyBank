@@ -61,4 +61,16 @@ public class TransactionController {
         List<Transaction> transactions = transactionService.filterByTransactionType(type);
         return ResponseEntity.ok(transactions);
     }
+
+    @GetMapping("/filterbycategory")
+    public ResponseEntity<List<Transaction>> filterTransactionCategory(@RequestParam String category) {
+        List<Transaction> transactions = transactionService.filterByTransactionCategory(category);
+        return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/filterbyamount")
+    public ResponseEntity<List<Transaction>> filterByTransactionAmount(@RequestParam double min, @RequestParam double max) {
+        List<Transaction> transactions = transactionService.filterByAmount(min, max);
+        return ResponseEntity.ok(transactions);
+    }
 }
