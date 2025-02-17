@@ -55,4 +55,10 @@ public class TransactionController {
         transactionService.deleteTransaction(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/filter/{type}")
+    public ResponseEntity<List<Transaction>> filterTransaction(@PathVariable String type) {
+        List<Transaction> transactions = transactionService.filterByTransactionType(type);
+        return ResponseEntity.ok(transactions);
+    }
 }

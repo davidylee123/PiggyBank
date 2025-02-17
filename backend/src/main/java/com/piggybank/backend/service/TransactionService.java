@@ -47,4 +47,8 @@ public class TransactionService {
     public void deleteTransaction(String id) {
         transactionRepository.deleteById(id);
     }
+
+    public List<Transaction> filterByTransactionType(String type) {
+        return transactionRepository.findByType(type);
+    }
 }
