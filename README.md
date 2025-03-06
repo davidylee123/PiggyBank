@@ -22,7 +22,7 @@ A **full-stack budget tracking application** built using **Spring Boot (Java) + 
 
 - **Frontend:** React, JavaScript
 
-- **Backend:** Java, Spring Boot
+- **Backend:** Java (21), Spring Boot
 
 - **Database:** MongoDB
 
