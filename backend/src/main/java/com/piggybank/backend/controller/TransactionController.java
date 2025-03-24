@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,6 +72,12 @@ public class TransactionController {
     @GetMapping("/filterbyamount")
     public ResponseEntity<List<Transaction>> filterByTransactionAmount(@RequestParam double min, @RequestParam double max) {
         List<Transaction> transactions = transactionService.filterByAmount(min, max);
+        return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/filterbydaterange")
+    public ResponseEntity<List<Transaction>> filterByTransactionDateRange(@RequestParam Instant startDate, @RequestParam Instant endDate) {
+        List<Transaction> transactions = transactionService.filterByTransactionDateRange(startDate, endDate);
         return ResponseEntity.ok(transactions);
     }
 }

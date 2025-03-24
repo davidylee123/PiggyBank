@@ -5,6 +5,7 @@ import com.piggybank.backend.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,5 +59,9 @@ public class TransactionService {
 
     public List<Transaction> filterByAmount(double min, double max) {
         return transactionRepository.findByAmount(min, max);
+    }
+
+    public List<Transaction> filterByTransactionDateRange(Instant startDate, Instant endDate) {
+        return transactionRepository.findByTransactionDateBetween(startDate, endDate);
     }
 }
