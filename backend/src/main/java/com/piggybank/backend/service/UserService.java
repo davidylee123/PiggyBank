@@ -32,4 +32,8 @@ public class UserService {
     public List<User> loginUser(String username, String password) {
         return userRepository.findByUsernameAndPassword(username, password);
     }
+
+    public void deleteUser(String id) {
+        userRepository.deleteById(id);
+    }
 }

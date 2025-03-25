@@ -31,7 +31,7 @@ function Transactions() {
                         <tbody className="bg-white divide-y divide-gray-200">
                             {transactions.map((transaction) => (
                                 <tr
-                                    key={transaction.id}
+                                    key={transaction._id || transaction.id}
                                     className="hover:bg-blue-50 transition-colors"
                                 >
                                     <td className="px-6 py-4 text-center">
@@ -42,7 +42,7 @@ function Transactions() {
                                         {transaction.description}
                                     </td>
                                     <td className="px-6 py-4 text-center">
-                                        ${transaction.amount.toFixed(2)}
+                                        ${transaction.amount ? transaction.amount.toFixed(2) : "0.00"}
                                     </td>
                                     <td className="px-6 py-4 text-center">{transaction.type}</td>
                                 </tr>
