@@ -1,13 +1,10 @@
-package com.piggybank.backend;
+package com.piggybank.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.piggybank.backend.controller.UserController;
 import com.piggybank.backend.model.User;
 import com.piggybank.backend.service.UserService;
-
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
 @Import(com.piggybank.backend.config.TestSecurityConfig.class)

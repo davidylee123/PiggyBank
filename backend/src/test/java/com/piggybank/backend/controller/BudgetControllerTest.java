@@ -1,4 +1,4 @@
-package com.piggybank.backend;
+package com.piggybank.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.piggybank.backend.config.TestSecurityConfig;

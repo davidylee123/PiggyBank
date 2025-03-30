@@ -1,4 +1,4 @@
-package com.piggybank.backend;
+package com.piggybank.backend.repository;
 
 import com.piggybank.backend.model.Budget;
 import com.piggybank.backend.repository.BudgetRepository;

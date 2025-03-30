@@ -1,4 +1,4 @@
-package com.piggybank.backend;
+package com.piggybank.backend.service;
 
 import com.piggybank.backend.model.Transaction;
 import com.piggybank.backend.repository.TransactionRepository;
