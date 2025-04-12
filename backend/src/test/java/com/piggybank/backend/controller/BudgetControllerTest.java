@@ -86,4 +86,27 @@ public class BudgetControllerTest {
         mockMvc.perform(delete("/api/budget/{id}", id))
                .andExpect(status().isNoContent());
     }
+    
+    @Test
+    public void testGetBudgetById_NotFound() throws Exception {
+        String id = "404";
+        when(budgetService.getBudgetById(id)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/budget/{id}", id))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testUpdateBudget_NotFound() throws Exception {
+        String id = "404";
+        Budget budget = new Budget();
+        budget.setId(id);
+
+        when(budgetService.updateBudget(id, budget)).thenReturn(null);
+
+        mockMvc.perform(put("/api/budget/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(budget)))
+            .andExpect(status().isNotFound());
+    }
 }
