@@ -59,4 +59,23 @@ public class UserServiceTest {
         userService.deleteUser(id);
         verify(userRepository).deleteById(id);
     }
+
+    @Test
+    public void testGetAllUsers() {
+        when(userRepository.findAll()).thenReturn(List.of(new User()));
+
+        List<User> result = userService.getAllUsers();
+        assertEquals(1, result.size());
+        verify(userRepository).findAll();
+    }
+
+    @Test
+    public void testCreateUser() {
+        User user = new User();
+        when(userRepository.save(user)).thenReturn(user);
+
+        User result = userService.createUser(user);
+        assertEquals(user, result);
+        verify(userRepository).save(user);
+    }
 }

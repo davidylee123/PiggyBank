@@ -2,8 +2,6 @@ package com.piggybank.backend.service;
 
 import com.piggybank.backend.model.Transaction;
 import com.piggybank.backend.repository.TransactionRepository;
-import com.piggybank.backend.service.TransactionService;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -52,6 +50,16 @@ public class TransactionServiceTest {
     }
 
     @Test
+    public void testUpdateTransaction_NotFound() {
+        String id = "missing";
+        Transaction tx = new Transaction();
+        when(transactionRepository.findById(id)).thenReturn(Optional.empty());
+
+        Transaction result = transactionService.updateTransaction(id, tx);
+        assertNull(result);
+    }
+
+    @Test
     public void testDeleteTransaction() {
         String id = "tx123";
         doNothing().when(transactionRepository).deleteById(id);
@@ -60,19 +68,47 @@ public class TransactionServiceTest {
     }
 
     @Test
-    public void testFilterByAmount() {
-        double min = 10.0, max = 100.0;
-        when(transactionRepository.findAll()).thenReturn(List.of(new Transaction()));
-        List<Transaction> result = transactionService.filterByAmount(min, max);
-        assertNotNull(result);
+    public void testFilterByAmount_Correct() {
+        when(transactionRepository.findByAmount(10.0, 100.0)).thenReturn(List.of(new Transaction()));
+        List<Transaction> result = transactionService.filterByAmount(10.0, 100.0);
+        assertEquals(1, result.size());
     }
 
     @Test
-    public void testFilterByTransactionDateRange() {
+    public void testFilterByTransactionDateRange_Correct() {
         Instant start = Instant.now().minusSeconds(3600);
         Instant end = Instant.now();
-        when(transactionRepository.findAll()).thenReturn(List.of(new Transaction()));
+        when(transactionRepository.findByTransactionDateBetween(start, end)).thenReturn(List.of(new Transaction()));
         List<Transaction> result = transactionService.filterByTransactionDateRange(start, end);
-        assertNotNull(result);
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    public void testGetAllTransactions() {
+        when(transactionRepository.findAll()).thenReturn(List.of(new Transaction()));
+        List<Transaction> result = transactionService.getAllTransactions();
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    public void testCreateTransaction() {
+        Transaction tx = new Transaction();
+        when(transactionRepository.save(tx)).thenReturn(tx);
+        Transaction result = transactionService.createTransaction(tx);
+        assertEquals(tx, result);
+    }
+
+    @Test
+    public void testFilterByTransactionType() {
+        when(transactionRepository.findByType("income")).thenReturn(List.of(new Transaction()));
+        List<Transaction> result = transactionService.filterByTransactionType("income");
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    public void testFilterByTransactionCategory() {
+        when(transactionRepository.findByCategory("groceries")).thenReturn(List.of(new Transaction()));
+        List<Transaction> result = transactionService.filterByTransactionCategory("groceries");
+        assertEquals(1, result.size());
     }
 }
