@@ -253,7 +253,11 @@ export default function Transactions() {
                             {filtered.map(tx => (
                                 <tr key={tx.id || tx._id} className="hover:bg-blue-50">
                                     <td className="px-6 py-4 text-center">
-                                        {new Date(tx.transactionDate).toLocaleDateString()}
+                                        {(() => {
+                                            const iso = (tx.transactionDate || "").split("T")[0];
+                                            const [year, month, day] = iso.split("-");
+                                            return `${month}/${day}/${year}`;
+                                        })()}
                                     </td>
                                     <td className="px-6 py-4 text-center">{tx.category}</td>
                                     <td className="px-6 py-4 text-center">{tx.description}</td>
