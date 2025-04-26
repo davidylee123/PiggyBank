@@ -17,7 +17,7 @@ export default function User() {
             const user = Array.isArray(response.data) ? response.data[0] : response.data;
             localStorage.setItem("loggedInUser", JSON.stringify(user));
             setError("");
-            navigate("/dashboard");
+            window.location.href = "/dashboard";
         } catch (err) {
             setError("Login failed. Please check your credentials.");
         }
@@ -30,7 +30,7 @@ export default function User() {
             const response = await axios.post("/users/signup", newUser);
             localStorage.setItem("loggedInUser", JSON.stringify(response.data));
             setError("");
-            navigate("/dashboard");
+            window.location.href = "/dashboard";
         } catch (err) {
             setError("Registration failed. Please check your details.");
         }
