@@ -6,7 +6,6 @@ export default function DashboardPage() {
     const handleLogout = () => {
         localStorage.removeItem("loggedInUser");
         navigate("/");
-        Window.location.reload();
     };
 
     return (

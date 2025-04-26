@@ -18,7 +18,6 @@ export default function User() {
             localStorage.setItem("loggedInUser", JSON.stringify(user));
             setError("");
             navigate("/dashboard");
-            Window.location.reload();
         } catch (err) {
             setError("Login failed. Please check your credentials.");
         }
@@ -32,7 +31,6 @@ export default function User() {
             localStorage.setItem("loggedInUser", JSON.stringify(response.data));
             setError("");
             navigate("/dashboard");
-            Window.location.reload();
         } catch (err) {
             setError("Registration failed. Please check your details.");
         }
