@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import User from "./Components/User";
 import DashboardPage from "./Components/DashboardPage";
@@ -6,26 +6,25 @@ import Transactions from "./Components/Transactions";
 import Budget from "./Components/Budget";
 import DataView from "./Components/DataView";
 
-export default function App() {
-  const loggedInUser = localStorage.getItem("loggedInUser");
+function App() {
+  const [loggedInUser, setLoggedInUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("loggedInUser");
+    if (storedUser) {
+      setLoggedInUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   return (
     <Routes>
       <Route
         path="/"
-        element={
-          loggedInUser
-            ? <Navigate to="/dashboard" replace />
-            : <User />
-        }
+        element={loggedInUser ? <Navigate to="/dashboard" replace /> : <User />}
       />
       <Route
-        path="/dashboard/*"
-        element={
-          loggedInUser
-            ? <DashboardPage />
-            : <Navigate to="/" replace />
-        }
+        path="/dashboard"
+        element={loggedInUser ? <DashboardPage /> : <Navigate to="/" replace />}
       >
         <Route index element={<Transactions />} />
         <Route path="transactions" element={<Transactions />} />
@@ -36,3 +35,5 @@ export default function App() {
     </Routes>
   );
 }
+
+export default App;
