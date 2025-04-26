@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../AxiosConfig";
 
 export default function Transactions() {
     const [transactions, setTransactions] = useState([]);
@@ -19,7 +19,7 @@ export default function Transactions() {
 
     useEffect(() => {
         axios
-            .get("http://localhost:8080/api/transactions")
+            .get("/transactions")
             .then(res => setTransactions(res.data))
             .catch(() => setError("Error fetching transactions"));
     }, []);
@@ -46,8 +46,8 @@ export default function Transactions() {
         };
         const id = editingTx?.id || editingTx?._id;
         const request = id
-            ? axios.put(`http://localhost:8080/api/transactions/${id}`, payload)
-            : axios.post("http://localhost:8080/api/transactions", payload);
+            ? axios.put(`/transactions/${id}`, payload)
+            : axios.post("/transactions", payload);
 
         request
             .then(res => {
@@ -78,7 +78,7 @@ export default function Transactions() {
 
     const handleDelete = id => {
         axios
-            .delete(`http://localhost:8080/api/transactions/${id}`)
+            .delete(`/transactions/${id}`)
             .then(() =>
                 setTransactions(list => list.filter(tx => (tx.id || tx._id) !== id))
             )

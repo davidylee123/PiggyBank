@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import axios from "../AxiosConfig";
 
-function Budget() {
+export default function Budget() {
     const [budget, setBudget] = useState([]);
     const [userId, setUserId] = useState("");
     const [monthlyLimit, setMonthlyLimit] = useState("");
@@ -11,8 +11,8 @@ function Budget() {
 
     useEffect(() => {
         axios
-            .get("http://localhost:8080/api/budget")
-            .then((res) => setBudget(res.data))
+            .get("/budget")
+            .then(res => setBudget(res.data))
             .catch(() => setError("Failed to fetch budget"));
     }, []);
 
@@ -24,32 +24,31 @@ function Budget() {
         setError("");
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = e => {
         e.preventDefault();
         const payload = {
             userId,
             monthlyLimit: parseFloat(monthlyLimit),
-            spentAmount: parseFloat(spentAmount),
+            spentAmount: parseFloat(spentAmount)
         };
         const request = editingBudget
-            ? axios.put(`http://localhost:8080/api/budget/${editingBudget.id}`, payload)
-            : axios.post("http://localhost:8080/api/budget", payload);
-
+            ? axios.put(`/budget/${editingBudget.id}`, payload)
+            : axios.post("/budget", payload);
         request
-            .then((res) => {
+            .then(res => {
                 if (editingBudget) {
-                    setBudget((b) =>
-                        b.map((item) => (item.id === editingBudget.id ? res.data : item))
+                    setBudget(b =>
+                        b.map(item => (item.id === editingBudget.id ? res.data : item))
                     );
                 } else {
-                    setBudget((b) => [...b, res.data]);
+                    setBudget(b => [...b, res.data]);
                 }
                 resetForm();
             })
             .catch(() => setError("Failed to save budget"));
     };
 
-    const handleEdit = (b) => {
+    const handleEdit = b => {
         setEditingBudget(b);
         setUserId(b.userId);
         setMonthlyLimit(b.monthlyLimit);
@@ -57,10 +56,10 @@ function Budget() {
         setError("");
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = id => {
         axios
-            .delete(`http://localhost:8080/api/budget/${id}`)
-            .then(() => setBudget((b) => b.filter((item) => item.id !== id)))
+            .delete(`/budget/${id}`)
+            .then(() => setBudget(b => b.filter(item => item.id !== id)))
             .catch(() => setError("Failed to delete budget"));
     };
 
@@ -73,7 +72,7 @@ function Budget() {
                     <input
                         type="text"
                         value={userId}
-                        onChange={(e) => setUserId(e.target.value)}
+                        onChange={e => setUserId(e.target.value)}
                         className="mt-1 block w-full p-2 border border-gray-300 rounded"
                         required
                     />
@@ -83,7 +82,7 @@ function Budget() {
                     <input
                         type="number"
                         value={monthlyLimit}
-                        onChange={(e) => setMonthlyLimit(e.target.value)}
+                        onChange={e => setMonthlyLimit(e.target.value)}
                         className="mt-1 block w-full p-2 border border-gray-300 rounded"
                         required
                     />
@@ -93,12 +92,11 @@ function Budget() {
                     <input
                         type="number"
                         value={spentAmount}
-                        onChange={(e) => setSpentAmount(e.target.value)}
+                        onChange={e => setSpentAmount(e.target.value)}
                         className="mt-1 block w-full p-2 border border-gray-300 rounded"
                         required
                     />
                 </div>
-
                 {editingBudget ? (
                     <div className="flex space-x-2">
                         <button
@@ -123,10 +121,8 @@ function Budget() {
                         Create Budget
                     </button>
                 )}
-
                 {error && <p className="mt-2 text-red-500">{error}</p>}
             </form>
-
             <div className="bg-white p-4 rounded shadow-md">
                 {budget.length > 0 ? (
                     <table className="w-full table-auto">
@@ -139,7 +135,7 @@ function Budget() {
                             </tr>
                         </thead>
                         <tbody>
-                            {budget.map((b) => (
+                            {budget.map(b => (
                                 <tr key={b.id} className="text-center border-t">
                                     <td className="px-4 py-2">{b.userId}</td>
                                     <td className="px-4 py-2">${b.monthlyLimit.toFixed(2)}</td>
@@ -171,5 +167,3 @@ function Budget() {
         </div>
     );
 }
-
-export default Budget;

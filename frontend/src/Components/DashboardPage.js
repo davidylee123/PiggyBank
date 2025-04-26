@@ -1,12 +1,11 @@
 import React from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 
-function DashboardPage() {
+export default function DashboardPage() {
     const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.removeItem("loggedInUser");
         navigate("/");
-        window.location.reload();
     };
 
     return (
@@ -52,5 +51,3 @@ function DashboardPage() {
         </div>
     );
 }
-
-export default DashboardPage;

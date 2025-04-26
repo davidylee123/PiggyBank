@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../AxiosConfig";
 import { useNavigate } from "react-router-dom";
 
-function User() {
+export default function User() {
     const [mode, setMode] = useState("login");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -13,12 +13,11 @@ function User() {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8080/api/users/login", { username, password });
+            const response = await axios.post("/users/login", { username, password });
             const user = Array.isArray(response.data) ? response.data[0] : response.data;
             localStorage.setItem("loggedInUser", JSON.stringify(user));
             setError("");
             navigate("/dashboard");
-            window.location.reload();
         } catch (err) {
             setError("Login failed. Please check your credentials.");
         }
@@ -28,11 +27,10 @@ function User() {
         e.preventDefault();
         try {
             const newUser = { username, password, email, role: "USER" };
-            const response = await axios.post("http://localhost:8080/api/users/signup", newUser);
+            const response = await axios.post("/users/signup", newUser);
             localStorage.setItem("loggedInUser", JSON.stringify(response.data));
             setError("");
             navigate("/dashboard");
-            window.location.reload();
         } catch (err) {
             setError("Registration failed. Please check your details.");
         }
@@ -125,5 +123,3 @@ function User() {
         return null;
     }
 }
-
-export default User;

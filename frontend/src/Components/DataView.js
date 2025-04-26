@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../AxiosConfig";
 import {
     ResponsiveContainer,
     BarChart,
@@ -20,7 +20,7 @@ export default function DataView() {
 
     useEffect(() => {
         axios
-            .get("http://localhost:8080/api/budget")
+            .get("/budget")
             .then((res) => setBudgets(res.data))
             .catch(() => setError("Could not load budget data"));
     }, []);
