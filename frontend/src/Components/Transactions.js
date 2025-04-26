@@ -263,7 +263,11 @@ export default function Transactions() {
                                     <td className="px-6 py-4 text-center">{tx.description}</td>
                                     <td className="px-6 py-4 text-center">${tx.amount.toFixed(2)}</td>
                                     <td className="px-6 py-4 text-center">
-                                        {tx.type.charAt(0).toUpperCase() + tx.type.slice(1).toLowerCase()}
+                                        {tx.type
+                                            ? `${tx.type.charAt(0).toUpperCase()}${tx.type
+                                                .slice(1)
+                                                .toLowerCase()}`
+                                            : ''}
                                     </td>
                                     <td className="px-6 py-4 text-center">
                                         <div className="inline-flex space-x-2">
