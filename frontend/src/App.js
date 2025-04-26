@@ -1,31 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import User from "./Components/User";
-import DashboardPage from "./Components/DashboardPage";
-import Transactions from "./Components/Transactions";
-import Budget from "./Components/Budget";
-import DataView from "./Components/DataView";
+import { Routes, Route, Navigate } from 'react-router-dom';
 
-function App() {
-  const [loggedInUser, setLoggedInUser] = useState(null);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("loggedInUser");
-    if (storedUser) {
-      setLoggedInUser(JSON.parse(storedUser));
-    }
-  }, []);
+export default function App() {
+  const loggedIn = Boolean(localStorage.getItem('loggedInUser'));
 
   return (
     <Routes>
-      <Route
-        path="/"
-        element={loggedInUser ? <Navigate to="/dashboard" replace /> : <User />}
-      />
-      <Route
-        path="/dashboard"
-        element={loggedInUser ? <DashboardPage /> : <Navigate to="/" replace />}
-      >
+      <Route path="/" element={
+        loggedIn
+          ? <Navigate to="/dashboard" replace />
+          : <User />
+      } />
+      <Route path="/dashboard/*" element={
+        loggedIn
+          ? <DashboardPage />
+          : <Navigate to="/" replace />
+      }>
         <Route index element={<Transactions />} />
         <Route path="transactions" element={<Transactions />} />
         <Route path="budget" element={<Budget />} />
@@ -35,5 +24,3 @@ function App() {
     </Routes>
   );
 }
-
-export default App;
