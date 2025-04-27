@@ -12,7 +12,11 @@ import {
     PieChart,
     Pie,
     Cell,
+    ScatterChart,
 } from "recharts";
+
+import KMeans from "ml-kmeans";
+
 
 export default function DataView() {
     const [budgets, setBudgets] = useState([]);
@@ -21,7 +25,19 @@ export default function DataView() {
     useEffect(() => {
         axios
             .get("/budget")
-            .then((res) => setBudgets(res.data))
+            .then((res) => {
+                const data = res.data;
+    
+                // Cluster budgets using KMeans
+                const vectors = data.map(b => [b.monthlyLimit, b.spentAmount]);
+                const result = KMeans(vectors, 3); // 3 clusters
+                const clusteredData = data.map((b, idx) => ({
+                    ...b,
+                    cluster: result.clusters[idx]
+                }));
+    
+                setBudgets(clusteredData);
+            })
             .catch(() => setError("Could not load budget data"));
     }, []);
 
@@ -44,7 +60,10 @@ export default function DataView() {
         { name: "Total Remaining", value: totalRemaining },
     ];
 
-    const COLORS = ["#10B981", "#3B82F6"];
+    const overspendingUsers = budgets.filter((b) => b.spentAmount / b.monthlyLimit >= 0.9);
+
+
+    const COLORS = ["#10B981", "#F59E0B", "#EF4444"];
 
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-16">
@@ -62,7 +81,17 @@ export default function DataView() {
                         <Tooltip formatter={(val) => `$${val.toFixed(2)}`} />
                         <Legend verticalAlign="top" height={36} />
                         <Bar dataKey="monthlyLimit" fill="#EF4444" name="Monthly Limit" />
-                        <Bar dataKey="spentAmount" fill="#10B981" name="Spent Amount" />
+                        <Bar
+                            dataKey="spentAmount"
+                            name="Spent Amount"
+                        >
+                            {budgets.map((entry, index) => (
+                                <Cell
+                                    key={`cell-${index}`}
+                                    fill={entry.spentAmount / entry.monthlyLimit >= 0.9 ? "#EF4444" : "#10B981"} // red if overspending
+                                />
+                            ))}
+                        </Bar>
                     </BarChart>
                 </ResponsiveContainer>
             </div>
@@ -104,6 +133,53 @@ export default function DataView() {
                         <Tooltip formatter={(val) => `$${val.toFixed(2)}`} />
                         <Legend verticalAlign="bottom" height={36} />
                     </PieChart>
+                    {overspendingUsers.length > 0 && (
+                        <div className="mt-10">
+                            <h3 className="text-2xl font-semibold text-center text-red-500 mb-4">
+                                Overspending Alert
+                            </h3>
+                            <ul className="list-disc list-inside text-center">
+                                {overspendingUsers.map((user) => (
+                                    <li key={user.userId}>
+                                        User {user.userId} has spent {((user.spentAmount / user.monthlyLimit) * 100).toFixed(1)}% of their budget!
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </ResponsiveContainer>
+            </div>
+            <div className="w-full h-80">
+                <ResponsiveContainer>
+                    <ScatterChart
+                        margin={{ top: 20, right: 30, bottom: 10, left: 0}}
+                    >
+                        <CartesianGrid />
+                        <XAxis
+                            type="number"
+                            dataKey="monthlyLimit"
+                            name="Monthly Limit"
+                            unit="$"
+                        />
+                        <YAxis
+                            type="number"
+                            dataKey="spentAmount"
+                            name="Spent Amount"
+                            unit="$"
+                        />
+                        <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+                        <Legend />
+
+                        {/* Draw one scatter per cluster */}
+                        {Array.from(new Set(budgets.map(b => b.cluster))).map((clusterId) => (
+                            <Scatter
+                                key={clusterId}
+                                name={`Cluster ${clusterId}`}
+                                data={budgets.filter(b => b.cluster === clusterId)}
+                                fill={COLORS[clusterId % COLORS.length]}
+                            />    
+                        ))}
+                    </ScatterChart>
                 </ResponsiveContainer>
             </div>
         </div>
