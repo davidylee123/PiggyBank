@@ -27,8 +27,6 @@ export default function DataView() {
             .get("/budget")
             .then((res) => {
                 const data = res.data;
-    
-                // Cluster budgets using KMeans
                 const vectors = data.map(b => [b.monthlyLimit, b.spentAmount]);
                 const result = KMeans(vectors, 3); // 3 clusters
                 const clusteredData = data.map((b, idx) => ({
@@ -170,7 +168,6 @@ export default function DataView() {
                         <Tooltip cursor={{ strokeDasharray: '3 3' }} />
                         <Legend />
 
-                        {/* Draw one scatter per cluster */}
                         {Array.from(new Set(budgets.map(b => b.cluster))).map((clusterId) => (
                             <Scatter
                                 key={clusterId}
