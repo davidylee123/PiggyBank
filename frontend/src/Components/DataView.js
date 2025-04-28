@@ -85,7 +85,7 @@ export default function DataView() {
                         <Tooltip formatter={v => `$${v.toFixed(2)}`} />
                         <Legend verticalAlign="top" height={36} />
                         <Bar dataKey="monthlyLimit" fill="#EF4444" name="Monthly Limit" />
-                        <Bar dataKey="spentAmount" name="Spent Amount">
+                        <Bar dataKey="spentAmount" fill="#10B981" name="Spent Amount">
                             {budgets.map((entry, i) => (
                                 <Cell
                                     key={i}
