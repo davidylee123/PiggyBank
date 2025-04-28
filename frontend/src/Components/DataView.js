@@ -54,12 +54,36 @@ export default function DataView() {
         <div className="max-w-4xl mx-auto p-4 space-y-16">
             <h2 className="text-3xl font-bold text-center">Data Overview</h2>
 
+            {/* Overspending alert section */}
+            {overspending.length > 0 && (
+                <div className="bg-red-100 border border-red-300 p-4 rounded text-center">
+                    <h3 className="text-2xl font-semibold text-red-600 mb-2">Overspending Alert</h3>
+                    {overspending.map(u => (
+                        <p key={u.userId}>
+                            User {u.userId} has spent {((u.spentAmount / u.monthlyLimit) * 100).toFixed(1)}% of their budget!
+                        </p>
+                    ))}
+                </div>
+            )}
+
+            {/* Monthly Limit vs Spent Amount */}
             <div className="w-full h-80">
                 <ResponsiveContainer>
-                    <BarChart data={budgets} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                    <BarChart
+                        data={budgets}
+                        margin={{ top: 20, right: 30, left: 40, bottom: 40 }}
+                    >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="userId" />
-                        <YAxis />
+                        <XAxis
+                            dataKey="userId"
+                            tick={{ dy: 5 }}
+                            label={{ value: "User ID", position: "insideBottom", dy: 30 }}
+                        />
+                        <YAxis
+                            tickFormatter={v => `$${v}`}
+                            label={{ value: "Amount ($)", angle: -90, position: "insideLeft", dx: -20 }}
+                            tick={{ dx: -5 }}
+                        />
                         <Tooltip formatter={v => `$${v.toFixed(2)}`} />
                         <Legend verticalAlign="top" height={36} />
                         <Bar dataKey="monthlyLimit" fill="#EF4444" name="Monthly Limit" />
@@ -67,7 +91,11 @@ export default function DataView() {
                             {budgets.map((entry, i) => (
                                 <Cell
                                     key={i}
-                                    fill={entry.spentAmount / entry.monthlyLimit >= 0.9 ? "#EF4444" : "#10B981"}
+                                    fill={
+                                        entry.spentAmount / entry.monthlyLimit >= 0.9
+                                            ? "#EF4444"
+                                            : "#10B981"
+                                    }
                                 />
                             ))}
                         </Bar>
@@ -75,12 +103,24 @@ export default function DataView() {
                 </ResponsiveContainer>
             </div>
 
+            {/* Remaining Amount */}
             <div className="w-full h-80">
                 <ResponsiveContainer>
-                    <BarChart data={remainingData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                    <BarChart
+                        data={remainingData}
+                        margin={{ top: 20, right: 30, left: 40, bottom: 40 }}
+                    >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="userId" />
-                        <YAxis />
+                        <XAxis
+                            dataKey="userId"
+                            tick={{ dy: 5 }}
+                            label={{ value: "User ID", position: "insideBottom", dy: 30 }}
+                        />
+                        <YAxis
+                            tickFormatter={v => `$${v}`}
+                            label={{ value: "Remaining ($)", angle: -90, position: "insideLeft", dx: -20 }}
+                            tick={{ dx: -5 }}
+                        />
                         <Tooltip formatter={v => `$${v.toFixed(2)}`} />
                         <Legend verticalAlign="top" height={36} />
                         <Bar dataKey="remaining" fill="#3B82F6" name="Remaining" />
@@ -88,6 +128,7 @@ export default function DataView() {
                 </ResponsiveContainer>
             </div>
 
+            {/* Pie Chart */}
             <div className="w-full h-80">
                 <ResponsiveContainer>
                     <PieChart>
@@ -98,7 +139,9 @@ export default function DataView() {
                             cx="50%"
                             cy="50%"
                             outerRadius={100}
-                            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                            label={({ name, percent }) =>
+                                `${name}: ${(percent * 100).toFixed(0)}%`
+                            }
                         >
                             {pieData.map((_, idx) => (
                                 <Cell key={idx} fill={COLORS[idx]} />
@@ -108,47 +151,35 @@ export default function DataView() {
                         <Legend verticalAlign="bottom" height={36} />
                     </PieChart>
                 </ResponsiveContainer>
-
-                {overspending.length > 0 && (
-                    <div className="mt-6 text-center">
-                        <h3 className="text-2xl font-semibold text-red-500 mb-2">Overspending Alert</h3>
-                        {overspending.map(u => (
-                            <p key={u.userId}>
-                                User {u.userId} has spent {((u.spentAmount / u.monthlyLimit) * 100).toFixed(1)}% of their budget!
-                            </p>
-                        ))}
-                    </div>
-                )}
             </div>
 
+            {/* Scatter Chart */}
             <div className="w-full h-80">
                 <ResponsiveContainer>
-                    <ScatterChart margin={{ top: 20, right: 30, left: 80, bottom: 80 }}>
+                    <ScatterChart margin={{ top: 20, right: 30, left: 60, bottom: 60 }}>
                         <CartesianGrid />
                         <XAxis
                             type="number"
                             dataKey="monthlyLimit"
-                            name="Monthly Limit"
                             unit="$"
                             domain={[0, d => Math.ceil(d / 100) * 100]}
                             tickFormatter={v => `$${v}`}
                             padding={{ left: 20, right: 20 }}
                             tickMargin={10}
-                            label={{ value: "Monthly Limit ($)", position: "insideBottom", dy: 20 }}
+                            label={{ value: "Monthly Limit ($)", position: "insideBottom", dy: 30 }}
                         />
                         <YAxis
                             type="number"
                             dataKey="spentAmount"
-                            name="Spent Amount"
                             unit="$"
                             domain={[0, d => Math.ceil(d / 50) * 50]}
                             tickFormatter={v => `$${v}`}
                             padding={{ top: 20, bottom: 20 }}
                             tickMargin={10}
-                            label={{ value: "Spent Amount ($)", angle: -90, position: "insideLeft", dx: -20 }}
+                            label={{ value: "Spent Amount ($)", angle: -90, position: "insideLeft", dx: -30 }}
                         />
-                        <Tooltip formatter={v => `$${v.toFixed(2)}`} cursor={{ strokeDasharray: '3 3' }} />
-                        <Legend wrapperStyle={{ bottom: -10, left: '50%', transform: 'translateX(-50%)' }} />
+                        <Tooltip formatter={v => `$${v.toFixed(2)}`} cursor={{ strokeDasharray: "3 3" }} />
+                        <Legend wrapperStyle={{ bottom: -10, left: "50%", transform: "translateX(-50%)" }} />
                         {Array.from(new Set(budgets.map(b => b.cluster))).map(id => (
                             <Scatter
                                 key={id}
