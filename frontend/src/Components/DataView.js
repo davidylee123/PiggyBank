@@ -22,12 +22,14 @@ export default function DataView() {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        axios.get("/budget")
+        axios
+            .get("/budget")
             .then(res => {
                 const data = res.data;
                 const vectors = data.map(b => [b.monthlyLimit, b.spentAmount]);
                 const result = kmeans(vectors, 3);
-                setBudgets(data.map((b, i) => ({ ...b, cluster: result.clusters[i] })));
+                const clustered = data.map((b, i) => ({ ...b, cluster: result.clusters[i] }));
+                setBudgets(clustered);
             })
             .catch(() => setError("Could not load budget data"));
     }, []);
@@ -45,9 +47,9 @@ export default function DataView() {
         { name: "Total Spent", value: totalSpent },
         { name: "Total Remaining", value: totalRemaining }
     ];
-    const overspending = budgets.filter(b => b.spentAmount / b.monthlyLimit >= 0.9);
+    const overspendingUsers = budgets.filter(b => b.spentAmount / b.monthlyLimit >= 0.9);
     const COLORS = ["#10B981", "#F59E0B", "#EF4444"];
-    const CLUSTER_NAMES = ["Big Spenders", "Moderate Spenders", "Frugal Spenders"];
+    const CLUSTER_NAMES = ["Frugal Spenders", "Moderate Spenders", "Big Spenders"];
 
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-16">
@@ -59,13 +61,13 @@ export default function DataView() {
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="userId" />
                         <YAxis />
-                        <Tooltip formatter={v => `$${v.toFixed(2)}`} />
+                        <Tooltip formatter={val => `$${val.toFixed(2)}`} />
                         <Legend verticalAlign="top" height={36} />
                         <Bar dataKey="monthlyLimit" fill="#EF4444" name="Monthly Limit" />
-                        <Bar dataKey="spentAmount" name="Spent Amount">
-                            {budgets.map((entry, i) => (
+                        <Bar dataKey="spentAmount" fill="#10B981" name="Spent Amount">
+                            {budgets.map((entry, idx) => (
                                 <Cell
-                                    key={i}
+                                    key={idx}
                                     fill={entry.spentAmount / entry.monthlyLimit >= 0.9 ? "#EF4444" : "#10B981"}
                                 />
                             ))}
@@ -80,7 +82,7 @@ export default function DataView() {
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="userId" />
                         <YAxis />
-                        <Tooltip formatter={v => `$${v.toFixed(2)}`} />
+                        <Tooltip formatter={val => `$${val.toFixed(2)}`} />
                         <Legend verticalAlign="top" height={36} />
                         <Bar dataKey="remaining" fill="#3B82F6" name="Remaining" />
                     </BarChart>
@@ -99,60 +101,73 @@ export default function DataView() {
                             outerRadius={100}
                             label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                         >
-                            {pieData.map((_, idx) => <Cell key={idx} fill={COLORS[idx]} />)}
+                            {pieData.map((_, idx) => (
+                                <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
+                            ))}
                         </Pie>
-                        <Tooltip formatter={v => `$${v.toFixed(2)}`} />
+                        <Tooltip formatter={val => `$${val.toFixed(2)}`} />
                         <Legend verticalAlign="bottom" height={36} />
                     </PieChart>
                 </ResponsiveContainer>
+                {overspendingUsers.length > 0 && (
+                    <div className="mt-10">
+                        <h3 className="text-2xl font-semibold text-center text-red-500 mb-4">
+                            Overspending Alert
+                        </h3>
+                        <ul className="list-disc list-inside text-center">
+                            {overspendingUsers.map(u => (
+                                <li key={u.userId}>
+                                    User {u.userId} has spent {((u.spentAmount / u.monthlyLimit) * 100).toFixed(1)}% of their budget!
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
 
             <div className="w-full h-80">
-                <ResponsiveContainer>
-                    <ScatterChart margin={{ top: 20, right: 30, left: 80, bottom: 80 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                    <ScatterChart margin={{ top: 20, right: 30, left: 60, bottom: 60 }}>
                         <CartesianGrid />
                         <XAxis
                             type="number"
                             dataKey="monthlyLimit"
                             name="Monthly Limit"
                             unit="$"
-                            domain={[0, 'dataMax']}
-                            tickFormatter={v => `$${v}`}
-                            label={{ value: "Monthly Limit ($)", position: "insideBottom", offset: -60 }}
+                            domain={[0, dataMax => Math.ceil(dataMax / 100) * 100]}
+                            tickFormatter={val => `$${val}`}
+                            padding={{ left: 20, right: 20 }}
+                            tickMargin={10}
+                            label={{ value: "Monthly Limit ($)", position: "insideBottom", offset: -50 }}
                         />
                         <YAxis
                             type="number"
                             dataKey="spentAmount"
                             name="Spent Amount"
                             unit="$"
-                            domain={[0, 'dataMax']}
-                            tickFormatter={v => `$${v}`}
-                            label={{ value: "Spent Amount ($)", angle: -90, position: "insideLeft", offset: -70 }}
+                            domain={[0, dataMax => Math.ceil(dataMax / 50) * 50]}
+                            tickFormatter={val => `$${val}`}
+                            padding={{ top: 20, bottom: 20 }}
+                            tickMargin={10}
+                            label={{ value: "Spent Amount ($)", angle: -90, position: "insideLeft", offset: -50 }}
                         />
-                        <Tooltip formatter={v => `$${v.toFixed(2)}`} cursor={{ strokeDasharray: '3 3' }} />
-                        <Legend wrapperStyle={{ bottom: -20, left: '50%', transform: 'translateX(-50%)' }} />
-                        {Array.from(new Set(budgets.map(b => b.cluster))).map(id => (
+                        <Tooltip formatter={val => `$${val.toFixed(2)}`} cursor={{ strokeDasharray: '3 3' }} />
+                        <Legend
+                            verticalAlign="bottom"
+                            align="center"
+                            wrapperStyle={{ bottom: 0, left: '50%', transform: 'translateX(-50%)' }}
+                        />
+                        {Array.from(new Set(budgets.map(b => b.cluster))).map(clusterId => (
                             <Scatter
-                                key={id}
-                                name={CLUSTER_NAMES[id]}
-                                data={budgets.filter(b => b.cluster === id)}
-                                fill={COLORS[id]}
+                                key={clusterId}
+                                name={CLUSTER_NAMES[clusterId] || `Cluster ${clusterId}`}
+                                data={budgets.filter(b => b.cluster === clusterId)}
+                                fill={COLORS[clusterId % COLORS.length]}
                             />
                         ))}
                     </ScatterChart>
                 </ResponsiveContainer>
             </div>
-
-            {overspending.length > 0 && (
-                <div className="text-center mt-8">
-                    <h3 className="text-2xl font-semibold text-red-500 mb-2">Overspending Alert</h3>
-                    {overspending.map(u => (
-                        <p key={u.userId}>
-                            User {u.userId} has spent {((u.spentAmount / u.monthlyLimit) * 100).toFixed(1)}% of their budget!
-                        </p>
-                    ))}
-                </div>
-            )}
         </div>
     );
 }
