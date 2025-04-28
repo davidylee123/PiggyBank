@@ -48,9 +48,9 @@ export default function DataView() {
     const COLORS = ["#10B981", "#F59E0B", "#EF4444"];
 
     const CLUSTER_NAMES = [
-        "🟢 Frugal Spenders",
-        "🟡 Moderate Spenders",
-        "🔴 Big Spenders"
+        "Frugal Spenders",
+        "Moderate Spenders",
+        "Big Spenders"
     ];
 
     return (
