@@ -47,6 +47,12 @@ export default function DataView() {
     const overspendingUsers = budgets.filter(b => b.spentAmount / b.monthlyLimit >= 0.9);
     const COLORS = ["#10B981", "#F59E0B", "#EF4444"];
 
+    const CLUSTER_NAMES = [
+        "🟢 Frugal Spenders",
+        "🟡 Moderate Spenders",
+        "🔴 Big Spenders"
+    ];
+
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-16">
             <h2 className="text-3xl font-bold text-center">Data Overview</h2>
@@ -60,7 +66,7 @@ export default function DataView() {
                         <Tooltip formatter={val => `$${val.toFixed(2)}`} />
                         <Legend verticalAlign="top" height={36} />
                         <Bar dataKey="monthlyLimit" fill="#EF4444" name="Monthly Limit" />
-                        <Bar dataKey="spentAmount" name="Spent Amount">
+                        <Bar dataKey="spentAmount" fill="#10B981" name="Spent Amount">
                             {budgets.map((entry, idx) => (
                                 <Cell
                                     key={idx}
@@ -125,14 +131,28 @@ export default function DataView() {
                 <ResponsiveContainer>
                     <ScatterChart margin={{ top: 20, right: 30, left: 0, bottom: 10 }}>
                         <CartesianGrid />
-                        <XAxis type="number" dataKey="monthlyLimit" name="Monthly Limit" unit="$" />
-                        <YAxis type="number" dataKey="spentAmount" name="Spent Amount" unit="$" />
-                        <Tooltip cursor={{ strokeDasharray: "3 3" }} />
+                        <XAxis type="number" dataKey="monthlyLimit" name="Monthly Limit" unit="$" label={{ value: "Monthly Limit ($)", position: "insideBottom", offset: -5 }} />
+                        <YAxis type="number" dataKey="spentAmount" name="Spent Amount" unit="$" label={{ value: "Spent Amount ($)", angle: -90, position: "insideLeft" }}
+                        />
+                        <Tooltip cursor={{ strokeDasharray: '3 3' }}
+                            content={({ active, payload }) => {
+                                if (active && payload && payload.length) {
+                                    const data = payload[0].payload;
+                                    return (
+                                        <div className="bg-white p-2 border rounded shadow text-sm">
+                                            <p><strong>User ID:</strong> {data.userId}</p>
+                                            <p><strong>Monthly Limit:</strong> ${data.monthlyLimit}</p>
+                                            <p><strong>Spent Amount:</strong> ${data.spentAmount}</p>
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            }} />
                         <Legend />
                         {Array.from(new Set(budgets.map(b => b.cluster))).map(clusterId => (
                             <Scatter
                                 key={clusterId}
-                                name={`Cluster ${clusterId}`}
+                                name={CLUSTER_NAMES[clusterId] || `Cluster ${clusterId}`}
                                 data={budgets.filter(b => b.cluster === clusterId)}
                                 fill={COLORS[clusterId % COLORS.length]}
                             />
