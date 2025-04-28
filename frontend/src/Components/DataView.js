@@ -127,7 +127,7 @@ export default function DataView() {
 
             <div className="w-full h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                    <ScatterChart margin={{ top: 20, right: 30, left: 80, bottom: 50 }}>
+                    <ScatterChart margin={{ top: 20, right: 30, left: 60, bottom: 60 }}>
                         <CartesianGrid />
                         <XAxis
                             type="number"
@@ -136,7 +136,9 @@ export default function DataView() {
                             unit="$"
                             domain={[0, dataMax => Math.ceil(dataMax / 100) * 100]}
                             tickFormatter={val => `$${val}`}
-                            label={{ value: "Monthly Limit ($)", position: "insideBottom", offset: -10 }}
+                            padding={{ left: 20, right: 20 }}
+                            tickMargin={10}
+                            label={{ value: "Monthly Limit ($)", position: "insideBottom", offset: -50 }}
                         />
                         <YAxis
                             type="number"
@@ -145,10 +147,16 @@ export default function DataView() {
                             unit="$"
                             domain={[0, dataMax => Math.ceil(dataMax / 50) * 50]}
                             tickFormatter={val => `$${val}`}
-                            label={{ value: "Spent Amount ($)", angle: -90, position: "insideLeft", offset: -5 }}
+                            padding={{ top: 20, bottom: 20 }}
+                            tickMargin={10}
+                            label={{ value: "Spent Amount ($)", angle: -90, position: "insideLeft", offset: -50 }}
                         />
                         <Tooltip formatter={val => `$${val.toFixed(2)}`} cursor={{ strokeDasharray: '3 3' }} />
-                        <Legend verticalAlign="bottom" align="center" height={30} wrapperStyle={{ marginTop: 10 }} />
+                        <Legend
+                            verticalAlign="bottom"
+                            align="center"
+                            wrapperStyle={{ bottom: 0, left: '50%', transform: 'translateX(-50%)' }}
+                        />
                         {Array.from(new Set(budgets.map(b => b.cluster))).map(clusterId => (
                             <Scatter
                                 key={clusterId}
